@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  uptime-kuma:
+    build: .
+    container_name: uptime-kuma-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NODE_ENV=production
+      - UPTIME_KUMA_DISABLE_FRAME_SAMEORIGIN=true
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.uptime.rule=Host(`uptime.brmmr.dev`)
+      - traefik.http.routers.uptime.tls=true
+      - traefik.http.routers.uptime.tls.certresolver=letsencrypt
+      - traefik.http.services.uptime.loadbalancer.server.port=3001
+      - traefik.http.middlewares.uptime-auth.basicauth.users=dev:$$2y$$10$$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
+
+volumes:
+  uptime-kuma-data:
+
+networks:
+  traefik:
+    external: true

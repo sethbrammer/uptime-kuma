@@ -309,6 +309,10 @@ let needSetup = false;
     const apiRouter = require("./routers/api-router");
     app.use(apiRouter);
 
+    // API v2 Router - New REST API
+    const apiV2Router = require("./routers/api-v2-router");
+    app.use("/api/v2", apiV2Router);
+
     // Status Page Router
     const statusPageRouter = require("./routers/status-page-router");
     app.use(statusPageRouter);
